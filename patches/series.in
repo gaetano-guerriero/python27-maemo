@@ -63,3 +63,4 @@ revert-unittest-loader-symlinks19352.diff
 enable-sqlite-loadext.diff
 installed-testsuite.diff
 issue21963.diff
+ctypes-selinux-double-free.diff

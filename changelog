@@ -1,3 +1,9 @@
+python2.7 (2.7.8-11maemo1) UNRELEASED; urgency=medium
+
+  * For Fremantle, optified
+
+ -- Gaetano Guerriero <x.guerriero@tin.it>  Wed, 12 Nov 2014 22:39:10 +0100
+
 python2.7 (2.7.8-11) unstable; urgency=medium
 
   * Update to 20141018, taken from the 2.7 branch.

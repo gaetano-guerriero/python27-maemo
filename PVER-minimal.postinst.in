@@ -8,6 +8,25 @@ if [ ! -f /etc/@PVER@/sitecustomize.py ]; then
 EOF
 fi
 
+#create symlink if not yet created
+if [ ! -L /usr/bin/python2.7 ]
+then
+        ln -s /opt/python27/bin/python2.7 /usr/bin/python2.7
+fi
+
+#create symlink if not yet created
+if [ ! -L /usr/lib/python2.7 ]
+then
+	ln -s /opt/python27/lib/python2.7 /usr/lib/python2.7
+fi
+
+#create symlink if not yet created
+if [ ! -L /opt/python27/local ]
+then
+	ln -s /opt/python27 /opt/python27/local
+fi
+
+
 case "$1" in
     configure)
         # Create empty directories in /usr/local
@@ -68,10 +87,12 @@ if [ "$1" = configure ]; then
 	done
 	if [ -f /var/lib/python/@PVER@_installed ]; then
 	    rm -f /var/lib/python/@PVER@_installed
-	    rmdir --ignore-fail-on-non-empty /var/lib/python 2>/dev/null
+	    #rmdir --ignore-fail-on-non-empty /var/lib/python 2>/dev/null
+	    [ "$(ls -A  /var/lib/python/ )" ] && echo -n "" || echo "rmdir /var/lib/python" 2> /dev/null
 	fi
     fi
 fi
+
 
 #DEBHELPER#
 

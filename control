@@ -1,22 +1,20 @@
 Source: python2.7
 Section: python
 Priority: optional
-Maintainer: Matthias Klose <doko@debian.org>
-Build-Depends: debhelper (>= 5), dpkg-dev (>= 1.17.11),
+Maintainer: Gaetano Guerriero <x.guerriero@tin.it>
+Build-Depends: debhelper (>= 5),
   quilt, autoconf, autotools-dev,
   lsb-release, sharutils,
-  libreadline-dev, libtinfo-dev, libncursesw5-dev (>= 5.3), gcc (>= 4:4.9.1-1~),
-  tk-dev, blt-dev (>= 2.4z), libssl-dev,
+  libreadline5-dev, libncursesw5-dev (>= 5.3), gcc,
+  tk8.5-dev, blt-dev (>= 2.4z), libssl-dev,
   zlib1g-dev, libbz2-dev,
   libexpat1-dev,
-  libbluetooth-dev [linux-any],
+  libbluetooth3-dev [linux-any],
   locales [!armel !avr32 !hppa !ia64 !mipsel],
   libsqlite3-dev, libffi-dev (>= 3.0.5) [!or1k !avr32],
-  libgpm2 [linux-any],
   mime-support, netbase, net-tools, bzip2,
-  libdb-dev (<< 1:6.0), libgdbm-dev, python:any, help2man,
+  libdb4.2-dev, libgdbm-dev, gdb, python, help2man,
   xvfb, xauth
-Build-Depends-Indep: python-sphinx
 Build-Conflicts: tcl8.4-dev, tk8.4-dev,
   python2.7-xml, python-xml,
   autoconf2.13, python-cxx-dev,
@@ -158,27 +156,6 @@ Replaces: python2.7 (<< 2.6.1-2)
 Description: IDE for Python (v2.7) using Tkinter
  IDLE is an Integrated Development Environment for Python (v2.7).
  IDLE is written using Tkinter and therefore quite platform-independent.
-
-Package: python2.7-doc
-Section: doc
-Architecture: all
-Depends: libjs-jquery, ${misc:Depends}
-Suggests: python2.7
-Description: Documentation for the high-level object-oriented language Python (v2.7)
- These is the official set of documentation for the interactive high-level
- object-oriented language Python (v2.7). All documents are provided
- in HTML format. The package consists of ten documents:
- .
-   * What's New in Python2.7
-   * Tutorial
-   * Python Library Reference
-   * Macintosh Module Reference
-   * Python Language Reference
-   * Extending and Embedding Python
-   * Python/C API Reference
-   * Installing Python Modules
-   * Documenting Python
-   * Distributing Python Modules
 
 Package: python2.7-dbg
 Section: debug

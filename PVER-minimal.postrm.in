@@ -6,8 +6,12 @@ if [ "$1" = "remove" ]; then
 
     if [ -f /var/lib/python/@PVER@_installed ]; then
 	rm -f /var/lib/python/@PVER@_installed
-	rmdir --ignore-fail-on-non-empty /var/lib/python 2>/dev/null
+	#rmdir --ignore-fail-on-non-empty /var/lib/python 2>/dev/null
+        [ "$(ls -A  /var/lib/python/ )" ] && echo -n "" || echo "rmdir /var/lib/python" 2> /dev/null
     fi
+
+
+
 fi
 
 if [ "$1" = "purge" ]; then
@@ -15,6 +19,29 @@ if [ "$1" = "purge" ]; then
         while rmdir $d 2> /dev/null; do d=`dirname $d`; done; \
     done
 fi
+
+
+#made by postinst
+#delete symlink
+if [ -L /usr/bin/python2.7 ]
+then
+        rm /usr/bin/python2.7
+fi
+
+#delete symlink
+if [ -L /usr/lib/python2.7 ]
+then
+        rm /usr/lib/python2.7
+fi
+
+#delete symlink
+if [ -L /opt/python27/local ]
+then
+       rm /opt/python27/local
+       [ "$(ls -A  /opt/python27 )" ] && echo -n "" || echo "rmdir /opt/python27"
+fi
+
+
 
 #DEBHELPER#
 
