@@ -105,7 +105,7 @@ with_gdbm := no
 with_interp := static
 #with_interp := shared
 
-PY_INTERPRETER = /$(PREFIX)/bin/python$(VER)
+PY_INTERPRETER = $(PREFIX)/bin/python$(VER)
 
 ifeq ($(DEFAULT_VERSION),yes)
   PY_PRIO = standard
@@ -162,15 +162,13 @@ endif
 ifneq ($(DEB_HOST_GNU_TYPE),$(DEB_BUILD_GNU_TYPE))
   with_pgo := 
 endif
-ifneq ($(DEB_HOST_GNU_TYPE),$(DEB_BUILD_GNU_TYPE))
-  with_pgo :=
-endif
 
 ifneq (,$(findstring $(DEB_HOST_ARCH), amd64 armel armhf i386))
   with_lto := yes
 endif
 #Force:
 with_lto := no
+with_pgo := no
 
 ifneq (,$(findstring noopt, $(DEB_BUILD_OPTIONS)))
     OPT_CFLAGS := $(filter-out -O%, $(OPT_CFLAGS))
@@ -192,6 +190,7 @@ ifeq ($(with_lto),yes)
 endif
 
 make_build_target = $(if $(with_pgo),profile-opt)
+
 
 buildd_static	:= $(CURDIR)/build-static
 buildd_shared	:= $(CURDIR)/build-shared
@@ -272,7 +271,8 @@ stamps/stamp-build-static: stamps/stamp-configure-static
 	dh_testdir
 	$(MAKE) $(NJOBS) -C $(buildd_static) \
 		EXTRA_CFLAGS="$(EXTRA_OPT_CFLAGS)" \
-		PROFILE_TASK='$(PROFILE_TASK)' $(make_build_target)
+			$(make_build_target)
+#		PROFILE_TASK='$(PROFILE_TASK)' $(make_build_target)
 
 	: # check that things are correctly built
 ifeq ($(DEB_HOST_GNU_TYPE),$(DEB_BUILD_GNU_TYPE))
