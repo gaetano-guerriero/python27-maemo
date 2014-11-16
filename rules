@@ -34,28 +34,28 @@ PKGVERSION := $(word 2, $(changelog_values))
 
 on_buildd := $(shell [ -f /CurrentlyBuilding -o "$$LOGNAME" = buildd -o "$$USER" = buildd ] && echo yes)
 
-ifneq (,$(findstring nocheck, $(DEB_BUILD_OPTIONS)))
-  WITHOUT_CHECK := yes
-endif
-WITHOUT_BENCH :=
-ifneq (,$(findstring nobench, $(DEB_BUILD_OPTIONS)))
-  WITHOUT_BENCH := yes
-endif
-ifneq (,$(filter $(DEB_HOST_ARCH), hurd-i386))
-  WITHOUT_BENCH := disabled on $(DEB_HOST_ARCH)
-endif
-ifeq ($(on_buildd),yes)
-  ifneq (,$(findstring $(DEB_HOST_ARCH), hppa mips mipsel mipsn32 mipsn32el mips64 mips64el s390))
-    WITHOUT_CHECK := yes
-  endif
-endif
-ifneq (,$(filter $(DEB_HOST_ARCH), hurd-i386 kfreebsd-amd64 kfreebsd-i386))
-  WITHOUT_CHECK := yes
-endif
-ifneq ($(DEB_HOST_GNU_TYPE),$(DEB_BUILD_GNU_TYPE))
-  WITHOUT_BENCH := yes
-  WITHOUT_CHECK := yes
-endif
+# ifneq (,$(findstring nocheck, $(DEB_BUILD_OPTIONS)))
+#   WITHOUT_CHECK := yes
+# endif
+# WITHOUT_BENCH :=
+# ifneq (,$(findstring nobench, $(DEB_BUILD_OPTIONS)))
+#   WITHOUT_BENCH := yes
+# endif
+# ifneq (,$(filter $(DEB_HOST_ARCH), hurd-i386))
+#   WITHOUT_BENCH := disabled on $(DEB_HOST_ARCH)
+# endif
+# ifeq ($(on_buildd),yes)
+#   ifneq (,$(findstring $(DEB_HOST_ARCH), hppa mips mipsel mipsn32 mipsn32el mips64 mips64el s390))
+#     WITHOUT_CHECK := yes
+#   endif
+# endif
+# ifneq (,$(filter $(DEB_HOST_ARCH), hurd-i386 kfreebsd-amd64 kfreebsd-i386))
+#   WITHOUT_CHECK := yes
+# endif
+# ifneq ($(DEB_HOST_GNU_TYPE),$(DEB_BUILD_GNU_TYPE))
+#   WITHOUT_BENCH := yes
+#   WITHOUT_CHECK := yes
+# endif
 
 #Force testings off
 WITHOUT_BENCH := yes
@@ -777,7 +777,7 @@ endif
 	  mv $$i $(d)/$(scriptdir)/lib-dynload/$$d; \
 	done
 
-	mv $(d)/$(PREFIX)/lib/libpython*.a $(d)/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)/
+#	mv $(d)/$(PREFIX)/lib/libpython*.a $(d)/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)/
 
 	mv $(d)/$(PREFIX)/lib/python$(VER)/site-packages \
 		$(d)/$(PREFIX)/lib/python$(VER)/dist-packages
