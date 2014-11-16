@@ -769,7 +769,7 @@ endif
 	-find $(d)/$(PREFIX)/lib/python$(VER) -name '*_failed*.so'
 	find $(d)/$(PREFIX)/lib/python$(VER) -name '*_failed*.so' | xargs -r rm -f
 
-	test -f $(d)/$(PREFIX)/lib/python$(VER)/lib-dynload/_bsddb.so
+#	test -f $(d)/$(PREFIX)/lib/python$(VER)/lib-dynload/_bsddb.so
 
 	for i in $(d)/$(scriptdir)/lib-dynload/*.so; do \
 	  b=$$(basename $$i .so); \
