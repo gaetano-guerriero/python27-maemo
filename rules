@@ -25,7 +25,9 @@ DEB_HOST_ARCH_BITS	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_ARCH_BITS)
 DEB_HOST_ARCH_ENDIAN	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_ARCH_ENDIAN)
 DEB_HOST_ARCH_OS	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_ARCH_OS)
 DEB_HOST_GNU_TYPE	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_GNU_TYPE)
-DEB_HOST_MULTIARCH	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_MULTIARCH)
+#DEB_HOST_MULTIARCH	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_MULTIARCH)
+
+DEB_HOST_MULTIARCH = $(DEB_HOST_GNU_CPU)-$(DEB_HOST_ARCH_OS)-gnu-maemo
 
 changelog_values := $(shell dpkg-parsechangelog \
 			| awk '/^(Version|Source):/ {print $$2}')
@@ -742,8 +744,8 @@ else
 	$(MAKE) -C $(buildd_shared) install prefix=$(CURDIR)/$(d)/$(PREFIX)
 endif
 	mkdir -p $(d)/$(PREFIX)/include/$(DEB_HOST_MULTIARCH)/$(PVER)
-#	mv $(d)/$(PREFIX)/include/$(PVER)/pyconfig.h \
-#		$(d)/$(PREFIX)/include/$(DEB_HOST_MULTIARCH)/$(PVER)/.
+	mv $(d)/$(PREFIX)/include/$(PVER)/pyconfig.h \
+		$(d)/$(PREFIX)/include/$(DEB_HOST_MULTIARCH)/$(PVER)/.
 	mv $(d)/$(PREFIX)/bin/python-config.sh $(d)/$(PREFIX)/bin/python$(VER)-config
 	sed -i 's/-O3/-O2/g;s/$(LTO_CFLAGS)//g;s/-fprofile-use *-fprofile-correction//g' \
 		$(d)/$(PREFIX)/bin/python$(VER)-config
@@ -777,7 +779,8 @@ endif
 	  mv $$i $(d)/$(scriptdir)/lib-dynload/$$d; \
 	done
 
-#	mv $(d)/$(PREFIX)/lib/libpython*.a $(d)/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)/
+	mkdir -p $(d)/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)
+	mv $(d)/$(PREFIX)/lib/libpython*.a $(d)/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)/
 
 	mv $(d)/$(PREFIX)/lib/python$(VER)/site-packages \
 		$(d)/$(PREFIX)/lib/python$(VER)/dist-packages
@@ -830,6 +833,7 @@ endif
 		$(scriptdir)/config-$(DEB_HOST_MULTIARCH) \
 		$(PREFIX)/share/doc
 	: # install the shared library
+	mkdir -p $(d)/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)
 	cp -p $(buildd_shared)/libpython$(VER).so.1.0 \
 		$(d_lib)/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)/
 	dh_link -p$(p_lib) \
@@ -852,6 +856,7 @@ endif
 	cp -p debian/pygettext.1 $(d)/$(PREFIX)/share/man/man1/pygettext$(VER).1
 
 	: # install the Makefile of the shared python build
+	mkdir -p $(d)/$(scriptdir)/config-$(DEB_HOST_MULTIARCH)
 	sed -e '/^OPT/s,-O3,-O2,' \
 	    -e 's/$(LTO_CFLAGS)//g' \
 	    -e 's,^RUNSHARED *=.*,RUNSHARED=,' \
@@ -899,6 +904,10 @@ endif
 		$(scriptdir) \
 		$(PREFIX)/include \
 		$(PREFIX)/share/man/man1
+
+	mkdir -p $(d)/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)/pkgconfig
+	mv $(d)/$(PREFIX)/lib/pkgconfig/python-$(VER)*.pc \
+	 $(d)/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)/pkgconfig
 
 	DH_COMPAT=2 dh_movefiles -p$(p_ldev) --sourcedir=$(d) \
 		$(PREFIX)/bin/$(DEB_HOST_MULTIARCH)-python$(VER)-config \
