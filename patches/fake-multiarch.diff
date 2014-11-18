@@ -1,0 +1,20 @@
+Index: python2.7-2.7.8/configure.ac
+===================================================================
+--- python2.7-2.7.8.orig/configure.ac	2014-11-17 18:32:35.080406390 -0500
++++ python2.7-2.7.8/configure.ac	2014-11-17 18:32:50.573238291 -0500
+@@ -672,13 +672,10 @@
+   ])
+ fi
+ 
+-MULTIARCH=$($CC --print-multiarch 2>/dev/null)
++eval $(dpkg-architecture)
++MULTIARCH=${DEB_HOST_GNU_CPU}-${DEB_HOST_ARCH_OS}-gnu
+ AC_SUBST(MULTIARCH)
+ 
+-MULTIARCH=$($CC --print-multiarch 2>/dev/null)
+-AC_SUBST(MULTIARCH)
+-
+-
+ # checks for UNIX variants that set C preprocessor variables
+ AC_USE_SYSTEM_EXTENSIONS
+ 

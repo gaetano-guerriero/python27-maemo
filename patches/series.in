@@ -64,3 +64,4 @@ enable-sqlite-loadext.diff
 installed-testsuite.diff
 issue21963.diff
 ctypes-selinux-double-free.diff
+fake-multiarch.diff

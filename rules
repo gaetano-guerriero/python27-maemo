@@ -27,7 +27,7 @@ DEB_HOST_ARCH_OS	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_ARCH_OS)
 DEB_HOST_GNU_TYPE	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_GNU_TYPE)
 #DEB_HOST_MULTIARCH	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_MULTIARCH)
 
-DEB_HOST_MULTIARCH = $(DEB_HOST_GNU_CPU)-$(DEB_HOST_ARCH_OS)-gnu-maemo
+DEB_HOST_MULTIARCH = $(DEB_HOST_GNU_CPU)-$(DEB_HOST_ARCH_OS)-gnu
 
 changelog_values := $(shell dpkg-parsechangelog \
 			| awk '/^(Version|Source):/ {print $$2}')
@@ -905,9 +905,6 @@ endif
 		$(PREFIX)/include \
 		$(PREFIX)/share/man/man1
 
-	mkdir -p $(d)/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)/pkgconfig
-	mv $(d)/$(PREFIX)/lib/pkgconfig/python-$(VER)*.pc \
-	 $(d)/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)/pkgconfig
 
 	DH_COMPAT=2 dh_movefiles -p$(p_ldev) --sourcedir=$(d) \
 		$(PREFIX)/bin/$(DEB_HOST_MULTIARCH)-python$(VER)-config \
@@ -1054,6 +1051,7 @@ endif
 	: # all other packages only have a copyright file.
 	dh_installdocs -p$(p_base) \
 		README Misc/NEWS Misc/ACKS
+	mkdir -p $(d_base)/$(PREFIX)/share/doc/$(p_base)
 	ln -sf NEWS.gz $(d_base)/$(PREFIX)/share/doc/$(p_base)/changelog.gz
 	dh_installdocs --all -N$(p_base) -N$(p_dev) -N$(p_dbg) -N$(p_lib) debian/README.Debian
 
@@ -1068,6 +1066,7 @@ endif
 	: # those packages have own README.Debian's
 	install -m 644 -p debian/README.$(p_base) \
 		$(d_base)/$(PREFIX)/share/doc/$(PVER)/README.Debian
+	mkdir -p $(d_idle)/$(PREFIX)/share/doc/$(p_idle)
 	install -m 644 -p debian/README.$(p_idle) \
 		$(d_idle)/$(PREFIX)/share/doc/$(p_idle)/README.Debian
 ifeq ($(with_tk),yes)
@@ -1119,6 +1118,7 @@ endif
 	: # need some files from the shared build
 	$(MAKE) -C $(buildd_shdebug) install DESTDIR=$(CURDIR)/$(d)-shdbg
 	$(MAKE) -C $(buildd_debug) install DESTDIR=$(CURDIR)/$(d)-dbg
+	mkdir -p $(d)-dbg/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)
 	mv $(d)-dbg/$(PREFIX)/lib/libpython*.a $(d)-dbg/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)/
 	mv $(d)-shdbg/$(scriptdir)/_sysconfigdata.py \
 		$(d)-shdbg/$(scriptdir)/_sysconfigdata_d.py
@@ -1152,6 +1152,7 @@ endif
 		/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)_d.so.1 \
 		/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)_d.so.1 \
 		/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)_d.so
+
 	sed -e '/^Libs:/s,-lpython$(VER),-lpython$(VER)_d,' \
 		-e '/^Cflags:/s,python$(VER),python$(VER)_d,' \
 		-e '/^Cflags:/s,$$, -I$${includedir}/$(DEB_HOST_MULTIARCH)/python$(VER)_d,' \
