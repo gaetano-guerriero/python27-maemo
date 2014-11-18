@@ -25,9 +25,11 @@ DEB_HOST_ARCH_BITS	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_ARCH_BITS)
 DEB_HOST_ARCH_ENDIAN	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_ARCH_ENDIAN)
 DEB_HOST_ARCH_OS	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_ARCH_OS)
 DEB_HOST_GNU_TYPE	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_GNU_TYPE)
+DEB_HOST_GNU_CPU	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_GNU_TYPE)
 #DEB_HOST_MULTIARCH	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_MULTIARCH)
 
-DEB_HOST_MULTIARCH = $(DEB_HOST_GNU_CPU)-$(DEB_HOST_ARCH_OS)-gnu
+#DEB_HOST_MULTIARCH = $(DEB_HOST_GNU_CPU)-$(DEB_HOST_ARCH_OS)-gnu
+DEB_HOST_MULTIARCH = $(DEB_HOST_GNU_TYPE)
 
 changelog_values := $(shell dpkg-parsechangelog \
 			| awk '/^(Version|Source):/ {print $$2}')
@@ -1257,6 +1259,7 @@ binary-indep: build-indep install stamps/stamp-control
 
 	for i in $(p_ltst); do \
 	  rm -rf debian/$$i/$(PREFIX)/share/doc/$$i; \
+	  mkdir -p debian/$$i/$(PREFIX)/share/doc; \
 	  ln -s $(p_lbase) debian/$$i/$(PREFIX)/share/doc/$$i; \
 	done
 
@@ -1299,10 +1302,12 @@ binary-arch: build-arch install
 	done
 	for i in $(p_lbase); do \
 	  rm -rf debian/$$i/$(PREFIX)/share/doc/$$i; \
+	  mkdir -p debian/$$i/$(PREFIX)/share/doc; \
 	  ln -s $(p_lmin) debian/$$i/$(PREFIX)/share/doc/$$i; \
 	done
 	for i in $(p_ldev) $(p_ldbg) $(p_lib); do \
 	  rm -rf debian/$$i/$(PREFIX)/share/doc/$$i; \
+	  mkdir -p debian/$$i/$(PREFIX)/share/doc; \
 	  ln -s $(p_lbase) debian/$$i/$(PREFIX)/share/doc/$$i; \
 	done
 	-find debian ! -perm -200 -print -exec chmod +w {} \;
