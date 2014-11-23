@@ -7,8 +7,19 @@ oldsite=/usr/lib/@PVER@/old-site-packages
 localsite=/usr/local/lib/@PVER@/dist-packages
 syslink=../../${localsite#/usr/*}
 
+libdir=/usr/lib/@PVER@
+reallibdir=/opt/@PVER_U@/lib/@PVER@
+
 case "$1" in
     install)
+	if [ -e $libdir ] && [ ! -L $libdir ]; then
+	    echo "new installation of @PVER@-minimal; $libdir exists but is"
+	    echo "not a symlink to $reallibdir. please find packagest shipping"
+	    echo "files in $libdir"
+	    echo "aborting installation of @PVER@-minimal"
+	    exit 1
+	fi
+
 	if [ -z "$2" ] && [ -d $syssite ] && [ ! -h $syssite ]; then
 	    echo "new installation of @PVER@-minimal; $syssite is a directory"
 	    echo "which is expected a symlink to $localsite."

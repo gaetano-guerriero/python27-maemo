@@ -9,20 +9,17 @@ EOF
 fi
 
 #create symlink if not yet created
-if [ ! -L /usr/bin/@PVER@ ]
-then
+if [ ! -e /usr/bin/@PVER@ ]; then
         ln -s /opt/@PVER_U@/bin/@PVER@ /usr/bin/@PVER@
 fi
 
 #create symlink if not yet created
-if [ ! -L /usr/lib/@PVER@ ]
-then
+if [ ! -e /usr/lib/@PVER@ ]; then
 	ln -s /opt/@PVER_U@/lib/@PVER@ /usr/lib/@PVER@
 fi
 
 #create symlink if not yet created
-if [ ! -L /opt/@PVER_U@/local ]
-then
+if [ ! -e /opt/@PVER_U@/local ]; then
 	ln -s /opt/@PVER_U@ /opt/@PVER_U@/local
 fi
 
