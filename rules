@@ -29,7 +29,7 @@ DEB_HOST_GNU_CPU	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_GNU_TYPE)
 #DEB_HOST_MULTIARCH	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_MULTIARCH)
 
 #DEB_HOST_MULTIARCH = $(DEB_HOST_GNU_CPU)-$(DEB_HOST_ARCH_OS)-gnu
-DEB_HOST_MULTIARCH = $(DEB_HOST_GNU_TYPE)
+DEB_HOST_MULTIARCH = $(DEB_BUILD_GNU_TYPE)
 
 changelog_values := $(shell dpkg-parsechangelog \
 			| awk '/^(Version|Source):/ {print $$2}')
@@ -78,6 +78,8 @@ distrelease  := $(shell lsb_release -cs)
 VER=2.7
 NVER=2.8
 PVER=python2.7
+# PVER without dots
+PVER_U=python27
 PRIORITY=$(shell echo $(VER) | tr -d '.')0
 
 
@@ -171,8 +173,8 @@ ifneq (,$(findstring $(DEB_HOST_ARCH), amd64 armel armhf i386))
   with_lto := yes
 endif
 #Force:
-with_lto := no
-with_pgo := no
+with_lto :=
+with_pgo :=
 
 ifneq (,$(findstring noopt, $(DEB_BUILD_OPTIONS)))
     OPT_CFLAGS := $(filter-out -O%, $(OPT_CFLAGS))
@@ -194,6 +196,7 @@ ifeq ($(with_lto),yes)
 endif
 
 make_build_target = $(if $(with_pgo),profile-opt)
+
 
 
 buildd_static	:= $(CURDIR)/build-static
@@ -659,6 +662,7 @@ stamps/stamp-build-doc: stamps/stamp-doc-html
 control-file:
 	sed -e "s/@PVER@/$(PVER)/g" \
 	    -e "s/@VER@/$(VER)/g" \
+	    -e "s/@PVER_U@/$(PVER_U)/g" \
 	    -e "s/@PYSTDDEP@/$(PYSTDDEP)/g" \
 	    -e "s/@PRIO@/$(PY_PRIO)/g" \
 	    -e "s/@MINPRIO@/$(PY_MINPRIO)/g" \
@@ -713,6 +717,7 @@ stamps/stamp-control:
 	  f2=`echo $$f | sed "s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
 	  if [ $$f2 != debian/control ]; then \
 	    sed -e "s/@PVER@/$(PVER)/g;s/@VER@/$(VER)/g" \
+		    -e "s/@PVER_U@/$(PVER_U)/g" \
 		    -e "s/@PRIORITY@/$(PRIORITY)/g" \
 		    -e "s,@SCRIPTDIR@,/$(scriptdir),g" \
 		    -e "s,@INFO@,$(info_docs),g" \
@@ -928,6 +933,7 @@ ifneq ($(DEB_HOST_MULTIARCH),$(DEB_HOST_GNU_TYPE))
 		$(d_ldev)/$(PREFIX)/share/man/man1/$(DEB_HOST_GNU_TYPE)-$(PVER)-config.1.gz
 endif
 
+	#mkdir -p $(d_ldev)/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)/pkgconfig
 	sed -i '/^Cflags:/s,$$, -I$${includedir}/$(DEB_HOST_MULTIARCH)/python$(VER),' \
 		$(d_ldev)/$(PREFIX)/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/python-$(VER).pc
 
