@@ -9,21 +9,21 @@ EOF
 fi
 
 #create symlink if not yet created
-if [ ! -L /usr/bin/python2.7 ]
+if [ ! -L /usr/bin/@PVER@ ]
 then
-        ln -s /opt/python27/bin/python2.7 /usr/bin/python2.7
+        ln -s /opt/@PVER_U@/bin/@PVER@ /usr/bin/@PVER@
 fi
 
 #create symlink if not yet created
-if [ ! -L /usr/lib/python2.7 ]
+if [ ! -L /usr/lib/@PVER@ ]
 then
-	ln -s /opt/python27/lib/python2.7 /usr/lib/python2.7
+	ln -s /opt/@PVER_U@/lib/@PVER@ /usr/lib/@PVER@
 fi
 
 #create symlink if not yet created
-if [ ! -L /opt/python27/local ]
+if [ ! -L /opt/@PVER_U@/local ]
 then
-	ln -s /opt/python27 /opt/python27/local
+	ln -s /opt/@PVER_U@ /opt/@PVER_U@/local
 fi
 
 
@@ -56,7 +56,7 @@ if [ "$1" = configure ]; then
 	filt='fgrep -v sitecustomize.py'
     fi
     files=$(dpkg -L lib@PVER@-minimal@HOST_QUAL@ \
-		| sed -n '/^\/usr\/lib\/@PVER@\/.*\.py$/p' | $filt)
+		| sed -n '/^\/opt\/@PVER_U@\/usr\/lib\/@PVER@\/.*\.py$/p' | $filt)
     if [ -n "$files" ]; then
 	@PVER@ -E -S /usr/lib/@PVER@/py_compile.py $files
 	if grep -sq '^byte-compile[^#]*optimize' /etc/python/debian_config; then
