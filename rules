@@ -322,7 +322,6 @@ common_configure_args = \
 		--enable-ipv6 \
 		--enable-unicode=ucs4 \
 		--with-dbmliborder=bdb:gdbm \
-		--with-system-expat
 
 ifneq (,$(filter $(DEB_HOST_ARCH), avr32 or1k))
   common_configure_args += --without-ffi
