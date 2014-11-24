@@ -14,7 +14,7 @@ case "$1" in
     install)
 	if [ -e $libdir ] && [ ! -L $libdir ]; then
 	    echo "new installation of @PVER@-minimal; $libdir exists but is"
-	    echo "not a symlink to $reallibdir. please find packagest shipping"
+	    echo "not a symlink to $reallibdir. please find packages shipping"
 	    echo "files in $libdir"
 	    echo "aborting installation of @PVER@-minimal"
 	    exit 1
