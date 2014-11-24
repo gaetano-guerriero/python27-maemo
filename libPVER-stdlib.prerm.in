@@ -15,11 +15,11 @@ case "$1" in
 	pc=$(dpkg-query -f '${db:Status-Abbrev} ${binary:Package}\n' -W pkgname \
             | grep -v '^.n' | wc -l)
 	if [ "$pc" -le 1 ]; then
-            remove_bytecode lib@PVER@-stdlib@HOST_QUAL@
+            remove_bytecode lib@PVER@-stdlib
 	fi
         ;;
     upgrade)
-	remove_bytecode lib@PVER@-stdlib@HOST_QUAL@
+	remove_bytecode lib@PVER@-stdlib
         # byte compilation in @PVER@ postinst, strict dependency
         ;;
     deconfigure)

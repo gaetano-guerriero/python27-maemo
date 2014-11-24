@@ -6,12 +6,12 @@ case "$1" in
     remove)
 	rm -f /usr/lib/debug/usr/bin/@PVER@-gdb.py[co]
 	rm -f /usr/lib/debug/usr/lib/lib@PVER@.so.1.0-gdb.py[co]
-	dpkg -L lib@PVER@-dbg@HOST_QUAL@ \
+	dpkg -L lib@PVER@-dbg \
 	    | awk '/\.py$/ {print $0"c\n" $0"o"}' \
 	    | xargs -r rm -f >&2
         ;;
     upgrade)
-	dpkg -L lib@PVER@-dbg@HOST_QUAL@ \
+	dpkg -L lib@PVER@-dbg \
 	    | awk '/\.py$/ {print $0"c\n" $0"o"}' \
 	    | xargs -r rm -f >&2
         ;;
